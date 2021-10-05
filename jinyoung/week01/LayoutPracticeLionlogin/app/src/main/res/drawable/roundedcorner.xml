@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--버튼 색 하나로 통일할 때 사용하는 방법 solid-->
+<!--    <solid android:color="#7EF192"/>-->
+
+    <!--버튼 색 그라데이션 효과 넣어 사용하는 방법-->
+    <gradient
+        android:angle="45"
+        android:endColor="#2DC892"
+        android:startColor="#7EF192"
+        android:type="linear"/>
+
+
+<!--    <stroke android:width="3dp"/>-->
+<!--    <padding android:left="1dp"-->
+<!--        android:top="1dp"-->
+<!--        android:right="1dp"-->
+<!--        android:bottom="1dp"/>-->
+
+    <corners android:bottomRightRadius="30dp"
+        android:bottomLeftRadius="30dp"
+        android:topLeftRadius="30dp"
+        android:topRightRadius="30dp"/>
+</shape>

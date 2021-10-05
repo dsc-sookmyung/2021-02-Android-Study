@@ -1,0 +1,2 @@
+rootProject.name = "LayoutPractice(Lionlogin)"
+include ':app'
