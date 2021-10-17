@@ -1,0 +1,2 @@
+rootProject.name = "Jinstargram"
+include ':app'

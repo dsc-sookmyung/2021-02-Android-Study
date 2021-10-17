@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1012494402794",
+    "project_id": "instargram-3838d",
+    "storage_bucket": "instargram-3838d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1012494402794:android:287f457f35982b8b680393",
+        "android_client_info": {
+          "package_name": "com.example.jinstargram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1012494402794-me519c7dnjfn3apitl4sm86fckaqgj8u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAS0RJ01V2xZPWYPnUkCEmMzvFQQsxni0s"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1012494402794-me519c7dnjfn3apitl4sm86fckaqgj8u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
