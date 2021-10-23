@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.usecamera">
+
+    <uses-permission android:name="android.permission.CAMERA"/> <!--카메라 권한-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> <!--파일 쓰기 권한-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/> <!--파일 읽기 권한-->
+    <uses-feature android:name="android.hardware.camera" android:required="true"/> <!--카메라 기능 사용-->
+
+    <application android:requestLegacyExternalStorage="true"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.UseCamera">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <provider
+            android:authorities="com.example.usecamera.fileprovider"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
+    </application>
+
+</manifest>
