@@ -1,8 +1,8 @@
 <resources>
     <!--    <string name="app_name">HowlStagram_f16</string>-->
     <string name="app_name">Howlstagram</string>
-    <string name="facebook_app_id">873009302900995</string>
-    <string name="fb_login_protocol_scheme">fb873009302900995</string>
+    <string name="facebook_app_id">3090160311267206</string>
+    <string name="fb_login_protocol_scheme">fb3090160311267206</string>
 
     <!-- Sign In -->
     <string name="email">Email</string>

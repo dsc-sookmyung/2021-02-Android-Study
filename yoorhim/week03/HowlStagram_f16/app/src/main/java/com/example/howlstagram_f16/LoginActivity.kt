@@ -7,7 +7,9 @@ import android.media.tv.TvContract.Programs.Genres.encode
 import android.net.Uri.encode
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
 import android.util.Base64.encode
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import bolts.Task
@@ -19,14 +21,17 @@ import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
+import com.google.android.gms.auth.api.credentials.IdToken
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.auth.*
 import com.google.zxing.aztec.encoder.Encoder.encode
 import com.google.zxing.qrcode.encoder.Encoder.encode
 import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 
 class LoginActivity : AppCompatActivity() {
@@ -53,19 +58,57 @@ class LoginActivity : AppCompatActivity() {
             googleLogin()
         }
 
-        var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
+        binding.facebookLoginButton.setOnClickListener {
+            facebookLogin()
+        }
+
+        var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken("221778989920-pgo3cptir6ruvjdtqabc84cg2dqfiipa.apps.googleusercontent.com")
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this,gso)
-
         callbackManager = CallbackManager.Factory.create()
     }
 
+    // 로그인 유지 기능
     override fun onStart() {
         super.onStart()
         if (auth?.currentUser != null)
             moveMainPage(auth?.currentUser)
+    }
+
+    fun facebookLogin() {
+        LoginManager.getInstance()
+            .logInWithReadPermissions(this, Arrays.asList("public_profile", "email","user_friends"))
+
+        LoginManager.getInstance()
+            .registerCallback(callbackManager, object : FacebookCallback<LoginResult>{
+                override fun onSuccess(result: LoginResult?) {
+                    handleFacebookAccessToken(result?.accessToken)
+                }
+
+                override fun onCancel() {
+                    TODO("Not yet implemented")
+                }
+
+                override fun onError(error: FacebookException?) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+    }
+
+    fun handleFacebookAccessToken(token: AccessToken?){
+        var credential = FacebookAuthProvider.getCredential(token?.token!!)
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener {
+                    task ->
+                if(task.isSuccessful){
+                    moveMainPage(task.result?.user)
+                }else{
+                    Toast.makeText(this,task.exception?.message,Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     fun signinAndSignup(){
@@ -85,28 +128,38 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
+    val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
+        var value = Auth.GoogleSignInApi.getSignInResultFromIntent(result.data)!!
+
+        if (value.isSuccess) {
+            var account = value.signInAccount
+            firebaseAuthwithGoogle(account)
+            Toast.makeText(this, "성공", Toast.LENGTH_LONG).show()
+        }
+        else {
+            Toast.makeText(this, "실패", Toast.LENGTH_LONG).show()
+        }
+    }
+
     fun googleLogin(){
         var signInIntent = googleSignInClient?.signInIntent
         launcher.launch(signInIntent)
     }
-    val launcher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
-            result->
-        var task = Auth.GoogleSignInApi.getSignInResultFromIntent(result.data)
-        if(task.isSuccess){
-            var account = task.signInAccount
-            firebaseAuthwithGoogle(account)
-        }else{
-            Toast.makeText(this,"fail to login",Toast.LENGTH_LONG).show()
-        }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        callbackManager?.onActivityResult(requestCode, resultCode, data)
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
-    fun firebaseAuthwithGoogle(account: GoogleSignInAccount){
+
+    private fun firebaseAuthwithGoogle(account: GoogleSignInAccount){
         var credential = GoogleAuthProvider.getCredential(account?.idToken,null)
-        auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener {
-                    task ->
+        auth!!.signInWithCredential(credential)?.addOnCompleteListener {
+                    task: com.google.android.gms.tasks.Task<AuthResult> ->
                 if(task.isSuccessful){
-                    moveMainPage(task.result?.user)
+                    //moveMainPage(task.result?.user)
+                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
                 }else{
                     Toast.makeText(this,task.exception?.message,Toast.LENGTH_LONG).show()
                 }
@@ -130,6 +183,7 @@ class LoginActivity : AppCompatActivity() {
     fun moveMainPage(user:FirebaseUser?){
         if(user != null) {
             startActivity(Intent(this, MainActivity::class.java))
+            finish()
         }
     }
 

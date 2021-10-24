@@ -60,6 +60,7 @@
             android:layout_marginBottom="35dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/facebook_login_button"
             android:text="@string/signin_facebook"
             android:textColor="@color/white"
             android:background="@drawable/btn_signin_facebook"
