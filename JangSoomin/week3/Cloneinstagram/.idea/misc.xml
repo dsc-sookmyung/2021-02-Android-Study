@@ -3,6 +3,15 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/activity_add_photo.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/activity_comment.xml" value="0.2607594936708861" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/fragment_detail.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/fragment_grid.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/fragment_user.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/item_comment.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/layout/item_detail.xml" value="0.36614583333333334" />
+        <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/2021-02-Android-Study/JangSoomin/week3/Cloneinstagram/app/src/main/res/menu/bottom_navigation_main.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/Cloneinstagram/app/src/main/res/layout/activity_add_photo.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/Cloneinstagram/app/src/main/res/layout/activity_login.xml" value="0.36614583333333334" />
         <entry key="..\:/Users/soomin/Documents/GDSC/AD_study/Cloneinstagram/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
