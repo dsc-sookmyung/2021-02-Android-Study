@@ -1,33 +1,41 @@
 {
   "project_info": {
-    "project_number": "221778989920",
-    "project_id": "howlstagram-f16-3de89",
-    "storage_bucket": "howlstagram-f16-3de89.appspot.com"
+    "project_number": "1082266191353",
+    "project_id": "howlstagram-f16-5b124",
+    "storage_bucket": "howlstagram-f16-5b124.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:221778989920:android:7274279bce987f4f974405",
+        "mobilesdk_app_id": "1:1082266191353:android:49cdd4d359900969ffe928",
         "android_client_info": {
           "package_name": "com.example.howlstagram_f16"
         }
       },
       "oauth_client": [
         {
-          "client_id": "221778989920-pgo3cptir6ruvjdtqabc84cg2dqfiipa.apps.googleusercontent.com",
+          "client_id": "1082266191353-8m2c90kc0vuq1d3c8geap721ds9okm8d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.howlstagram_f16",
+            "certificate_hash": "8483d6ca2ae6dd8998136f38d614cc7a2aada579"
+          }
+        },
+        {
+          "client_id": "1082266191353-ugabe4u6v228vun24iibl5ecgg5s8n6p.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDfr5xp7InuAFvfkxybUc2WSe1RFl8LBcY"
+          "current_key": "AIzaSyDT9MeLZqf5rwAJgmtkGhQQXBJJyB4Aocg"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "221778989920-pgo3cptir6ruvjdtqabc84cg2dqfiipa.apps.googleusercontent.com",
+              "client_id": "1082266191353-ugabe4u6v228vun24iibl5ecgg5s8n6p.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
