@@ -41,6 +41,10 @@ class DetailViewFragment : Fragment() {
             firestore?.collection("images")?.orderBy("timestamp")?.addSnapshotListener { querySnapshot, firebaseFirestoreException ->
                 contentDTOs.clear()
                 contentUidList.clear()
+
+                //Sometimes, This code return null of querySnapshot when it signout
+                if(querySnapshot == null) return@addSnapshotListener
+
                 for(snapshot in querySnapshot!!.documents){
                     var item = snapshot.toObject(ContentDTO::class.java)
                     contentDTOs.add(item!!)
@@ -74,6 +78,47 @@ class DetailViewFragment : Fragment() {
             //ProfileImages
             //Glide.with(holder.itemView.context).load(contentDTOs!![position].imageUrl).into(viewholder.detailviewitem_profile_image)
 
+            //This code is when the button is clicked
+            viewholder.detailviewitem_favorite_imageview.setOnClickListener {
+                favoriteEvent(position)
+            }
+
+            //This code is when the page is loaded
+            if(contentDTOs!![position].favorites.containsKey(uid)){
+                //This is like status
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite)
+            } else {
+                //This is unlike status
+                viewholder.detailviewitem_favorite_imageview.setImageResource(R.drawable.ic_favorite_border)
+            }
+
+            //This code is when the profile image is clicked
+            viewholder.detailviewitem_profile_image.setOnClickListener {
+                var fragment = UserFragment()
+                var bundle = Bundle()
+                bundle.putString("destinationUid", contentDTOs[position].uid)
+                bundle.putString("userId", contentDTOs[position].userId)
+                fragment.arguments = bundle
+                activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content, fragment)?.commit()
+            }
+        }
+
+        fun favoriteEvent(position: Int){
+            var tsDoc = firestore?.collection("images")?.document(contentUidList[position])
+            firestore?.runTransaction { transaction ->
+                var contentDTO = transaction.get(tsDoc!!).toObject(ContentDTO::class.java)
+
+                if (contentDTO!!.favorites.containsKey(uid)){
+                    // When the button is clicked
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount - 1
+                    contentDTO?.favorites.remove(uid)
+                } else {
+                    // when the button is not clicked
+                    contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
+                    contentDTO?.favorites[uid!!] = true
+                }
+                transaction.set(tsDoc, contentDTO)
+            }
         }
 
         override fun getItemCount(): Int {
