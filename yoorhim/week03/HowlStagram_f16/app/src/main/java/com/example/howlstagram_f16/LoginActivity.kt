@@ -12,7 +12,6 @@ import android.util.Base64.encode
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import bolts.Task
 import com.example.howlstagram_f16.databinding.ActivityLoginBinding
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
@@ -27,6 +26,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.*
 import com.google.zxing.aztec.encoder.Encoder.encode
 import com.google.zxing.qrcode.encoder.Encoder.encode
@@ -63,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("221778989920-pgo3cptir6ruvjdtqabc84cg2dqfiipa.apps.googleusercontent.com")
+            .requestIdToken("1082266191353-ugabe4u6v228vun24iibl5ecgg5s8n6p.apps.googleusercontent.com")
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this,gso)
@@ -88,11 +88,9 @@ class LoginActivity : AppCompatActivity() {
                 }
 
                 override fun onCancel() {
-                    TODO("Not yet implemented")
                 }
 
                 override fun onError(error: FacebookException?) {
-                    TODO("Not yet implemented")
                 }
 
             })
@@ -101,8 +99,8 @@ class LoginActivity : AppCompatActivity() {
     fun handleFacebookAccessToken(token: AccessToken?){
         var credential = FacebookAuthProvider.getCredential(token?.token!!)
         auth?.signInWithCredential(credential)
-            ?.addOnCompleteListener {
-                    task ->
+            ?.addOnCompleteListener(this@LoginActivity) {
+                    task: Task<AuthResult> ->
                 if(task.isSuccessful){
                     moveMainPage(task.result?.user)
                 }else{
@@ -155,8 +153,8 @@ class LoginActivity : AppCompatActivity() {
 
     private fun firebaseAuthwithGoogle(account: GoogleSignInAccount){
         var credential = GoogleAuthProvider.getCredential(account?.idToken,null)
-        auth!!.signInWithCredential(credential)?.addOnCompleteListener {
-                    task: com.google.android.gms.tasks.Task<AuthResult> ->
+        auth!!.signInWithCredential(credential)?.addOnCompleteListener(this@LoginActivity) {
+                    task: Task<AuthResult> ->
                 if(task.isSuccessful){
                     //moveMainPage(task.result?.user)
                     startActivity(Intent(this@LoginActivity, MainActivity::class.java))
