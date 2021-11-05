@@ -10,7 +10,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import com.example.cloneinstagram.R
 import com.example.cloneinstagram.databinding.ActivityAddPhotoBinding
 import com.example.cloneinstagram.databinding.ActivityMainBinding
+import com.example.cloneinstagram.navigation.model.ContentDTO
+import com.google.android.gms.tasks.Task
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.UploadTask
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -20,6 +25,8 @@ class AddPhotoActivity : AppCompatActivity() {
 
     var storage : FirebaseStorage? =null
     var photoUri: Uri? = null
+    var auth: FirebaseAuth? =null
+    var firestore : FirebaseFirestore? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,7 +34,8 @@ class AddPhotoActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         storage = FirebaseStorage.getInstance()
-
+        auth = FirebaseAuth.getInstance()
+        firestore = FirebaseFirestore.getInstance()
         var photoPickerIntent = Intent(Intent.ACTION_PICK)
         photoPickerIntent.type="image/*"
         launcher.launch(photoPickerIntent)
@@ -52,9 +60,21 @@ class AddPhotoActivity : AppCompatActivity() {
         var imageFileName ="IMAGE_"+timestamp+"_png"
         var storageRef = storage?.reference?.child("image")?.child(imageFileName)
 
-        storageRef?.putFile(photoUri!!)?.addOnSuccessListener {
-            Toast.makeText(this,getString(R.string.upload_success),Toast.LENGTH_LONG).show()
+
+        storageRef?.putFile(photoUri!!)?.continueWithTask { task: Task<UploadTask.TaskSnapshot>->
+            return@continueWithTask storageRef.downloadUrl
+        }?.addOnSuccessListener { uri ->
+            var contentDTO = ContentDTO()
+            contentDTO.imageUrl=uri.toString()
+            contentDTO.uid = auth?.currentUser?.uid
+            contentDTO.userId = auth?.currentUser?.email
+            contentDTO.explain =binding.addphotoEditExplain.text.toString()
+            contentDTO.timestamp=System.currentTimeMillis()
+            firestore?.collection("images")?.document()?.set(contentDTO)
+            setResult(Activity.RESULT_OK)
+            finish()
         }
+
     }
 
 

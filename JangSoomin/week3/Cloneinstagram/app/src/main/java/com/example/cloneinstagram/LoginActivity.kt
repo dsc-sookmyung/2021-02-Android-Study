@@ -37,12 +37,20 @@ class LoginActivity : AppCompatActivity() {
         binding.googleLoginBtn.setOnClickListener {
             googleLogin()
         }
-        var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_GAMES_SIGN_IN)
+        var gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken("439803585796-ulbjr90c12rdagiu58ini8rht1sdge61.apps.googleusercontent.com")
             .requestEmail()
             .build()
         googleSignInClient = GoogleSignIn.getClient(this,gso)
     }
+    override fun onStart(){
+        super.onStart()
+        moveMainPage(auth?.currentUser)
+    }
+
+
+
+
     // 수정3.......................................
     fun googleLogin(){
         var signInIntent = googleSignInClient?.signInIntent
@@ -104,6 +112,7 @@ class LoginActivity : AppCompatActivity() {
     fun moveMainPage(user:FirebaseUser?){
         if(user != null){
             startActivity(Intent(this,MainActivity::class.java))
+            finish()
         }
     }
 
