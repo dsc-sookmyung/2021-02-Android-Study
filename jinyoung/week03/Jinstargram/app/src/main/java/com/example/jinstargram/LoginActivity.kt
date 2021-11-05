@@ -1,8 +1,11 @@
 package com.example.jinstargram
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Base64
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -19,15 +22,16 @@ import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.Auth
 import com.google.firebase.auth.*
+import java.security.MessageDigest
+import java.security.NoSuchAlgorithmException
 import java.util.*
 import java.util.Arrays.asList
-import com.example.jinstargram.R
 
 class LoginActivity : AppCompatActivity() {
     var auth: FirebaseAuth? = null
     var googleSignInClient: GoogleSignInClient? = null
-
     var callbackManager: CallbackManager? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -49,6 +53,21 @@ class LoginActivity : AppCompatActivity() {
         googleSignInClient = GoogleSignIn.getClient(this, gso)
         //printHashKey()
         callbackManager = CallbackManager.Factory.create()
+    }
+    fun printHashKey() {
+        try {
+            val info = packageManager.getPackageInfo(packageName, PackageManager.GET_SIGNATURES)
+            for (signature in info.signatures) {
+                val md = MessageDigest.getInstance("SHA")
+                md.update(signature.toByteArray())
+                val hashKey = String(Base64.encode(md.digest(),0))
+                Log.i("TAG", "printHashKey() Hash Key: $hashKey")
+            }
+        } catch (e: NoSuchAlgorithmException) {
+            Log.e("TAG", "printHashKey()", e)
+        } catch (e: Exception) {
+            Log.e("TAG", "printHashKey()", e)
+        }
     }
 
     override fun onStart() {
@@ -77,7 +96,7 @@ class LoginActivity : AppCompatActivity() {
 
     fun facebookLogin() {
         LoginManager.getInstance()
-            .logInWithReadPermissions(this, asList("public_profile", "email"))
+            .logInWithReadPermissions(this, asList("public_profile", "email", "user_friends"))
 
         LoginManager.getInstance()
             .registerCallback(callbackManager, object : FacebookCallback<LoginResult>{
@@ -92,17 +111,12 @@ class LoginActivity : AppCompatActivity() {
     }
     fun handleFacebookAccessToken(token : AccessToken?){
         var credential = FacebookAuthProvider.getCredential(token?.token!!)
-        auth!!.signInWithCredential(credential)
-            .addOnCompleteListener(this@LoginActivity) {
-                    task: Task<AuthResult> ->
-                if (task.isSuccessful) {
+        auth?.signInWithCredential(credential)
+            ?.addOnCompleteListener{
+                    task->
+                if (task.isSuccessful){
                     // Login
-                    Toast.makeText(
-                        this@LoginActivity,
-                        "로그인 성공",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    startActivity(Intent(this@LoginActivity, MainActivity::class.java))
+                    moveMainPage(task.result?.user)
                 } else {
                     // Show the error message
                     Toast.makeText(this, task.exception?.message, Toast.LENGTH_LONG).show()
@@ -112,8 +126,8 @@ class LoginActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        callbackManager?.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data)
+        callbackManager?.onActivityResult(requestCode, resultCode, data);
     }
 
     private fun firebaseAuthWithGoogle(idToken: GoogleSignInAccount?) {
