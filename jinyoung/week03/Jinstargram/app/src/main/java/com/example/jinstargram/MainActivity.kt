@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import androidx.core.app.ActivityCompat
@@ -15,10 +16,14 @@ import com.example.hawlinstargram.navigation.DetailViewFragment
 import com.example.hawlinstargram.navigation.GridFragment
 import com.example.hawlinstargram.navigation.UserFragment
 import com.example.jinstargram.navigation.AddPhotoActivity
+import com.example.jinstargram.util.FcmPush
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceIdReceiver
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.UploadTask
 import kotlinx.android.synthetic.main.activity_main.*
@@ -33,8 +38,14 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
 
         //set default screen
         bottom_navigation.selectedItemId=R.id.action_home
+        registerPushToken()
     }
-
+    /*
+    override fun onStop(){
+        super.onStop()
+        FcmPush.instance.sendMessage("l4n4T3qV9tNxBZzxIOBLqR9IE3x2","hi","bye")
+    }
+    */
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
         setToolbarDefault()
         when(p0.itemId){
@@ -70,6 +81,22 @@ class MainActivity : AppCompatActivity(),BottomNavigationView.OnNavigationItemSe
             }
         }
         return false
+    }
+    fun registerPushToken(){
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w("TAG", "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+            val uid = FirebaseAuth.getInstance().currentUser?.uid
+            val map = mutableMapOf<String, Any>()
+            map["pushToken"] = token!!
+
+            FirebaseFirestore.getInstance().collection("pushtokens").document(uid!!).set(map)
+        })
     }
     fun setToolbarDefault(){
         toolbar_username.visibility= View.GONE

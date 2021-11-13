@@ -21,8 +21,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.jinstargram.LoginActivity
 import com.example.jinstargram.MainActivity
 import com.example.jinstargram.R
+import com.example.jinstargram.navigation.model.AlarmDTO
 import com.example.jinstargram.navigation.model.ContentDTO
 import com.example.jinstargram.navigation.model.FollowDTO
+import com.example.jinstargram.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_main.*
@@ -144,7 +146,7 @@ class UserFragment:Fragment() {
                 followDTO= FollowDTO()
                 followDTO!!.followerCount=1
                 followDTO!!.followers[currentUserUid!!]=true
-
+                followerAlarm(uid!!)
                 transaction.set(tsDocFollower,followDTO!!)
                 return@runTransaction
             }
@@ -156,10 +158,23 @@ class UserFragment:Fragment() {
                 //it add my follower when i don't follow a third person
                 followDTO!!.followerCount=followDTO!!.followerCount+1
                 followDTO!!.followers[currentUserUid!!]=true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower,followDTO!!)
             return@runTransaction
         }
+    }
+    fun followerAlarm(destinationUid : String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinationUid=destinationUid
+        alarmDTO.userId=auth?.currentUser?.email
+        alarmDTO.uid=auth?.currentUser?.uid
+        alarmDTO.kind=2
+        alarmDTO.timestamp=System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var message=auth?.currentUser?.email + getString(R.string.alarm_follow)
+        FcmPush.instance.sendMessage(destinationUid,"Jinstargram",message)
     }
     fun getProfileImage(){
         firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener{documentSnapshot,firebaseFirestoreException ->

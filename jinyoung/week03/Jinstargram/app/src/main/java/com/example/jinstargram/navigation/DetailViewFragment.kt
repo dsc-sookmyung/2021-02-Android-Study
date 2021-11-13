@@ -1,5 +1,6 @@
 package com.example.hawlinstargram.navigation
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,7 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.jinstargram.R
+import com.example.jinstargram.navigation.CommentActivity
+import com.example.jinstargram.navigation.model.AlarmDTO
 import com.example.jinstargram.navigation.model.ContentDTO
+import com.example.jinstargram.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_detail.view.*
@@ -100,6 +104,12 @@ class DetailViewFragment : Fragment() {
                 fragment.arguments=bundle
                 activity?.supportFragmentManager?.beginTransaction()?.replace(R.id.main_content,fragment)?.commit()
             }
+            viewholder.detailviewitem_comment_imageview.setOnClickListener {v ->
+                var intent= Intent(v.context,CommentActivity::class.java)
+                intent.putExtra("contentUid",contentUidList[p1])
+                intent.putExtra("destinationUid",contentDTOs[p1].uid)
+                startActivity(intent)
+            }
             //profileimage
             //Glide.with(p0.itemView.context).load(contentDTOs!![p1].imageUrl).into(viewholder.detailviewitem_profile_image)
         }
@@ -117,9 +127,23 @@ class DetailViewFragment : Fragment() {
                     //when the button is not clicked
                     contentDTO?.favoriteCount=contentDTO?.favoriteCount +1
                     contentDTO?.favorites[uid!!]=true
+                    favoriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc,contentDTO)
             }
+        }
+
+        fun favoriteAlarm(destinationUid : String){
+            var alarmDTO = AlarmDTO()
+            alarmDTO.destinationUid=destinationUid
+            alarmDTO.userId=FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid=FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind=0
+            alarmDTO.timestamp=System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+            var message=FirebaseAuth.getInstance()?.currentUser?.email + getString(R.string.alarm_favorite)
+            FcmPush.instance.sendMessage(destinationUid,"Jinstargram",message)
         }
     }
 }
