@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.MyApp" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <!-- ... -->
+        <item name="colorPrimary">@color/design_default_color_primary</item>
+        <item name="colorPrimaryVariant">@color/design_default_color_primary_dark</item>
+        <item name="colorOnPrimary">@color/design_default_color_secondary</item>
+    </style>
+
+
+</resources>
