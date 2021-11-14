@@ -23,8 +23,10 @@ import com.example.cloneinstagram.MainActivity
 import com.example.cloneinstagram.R
 import com.example.cloneinstagram.databinding.ActivityMainBinding
 import com.example.cloneinstagram.databinding.FragmentUserBinding
+import com.example.cloneinstagram.navigation.model.AlarmDTO
 import com.example.cloneinstagram.navigation.model.ContentDTO
 import com.example.cloneinstagram.navigation.model.FollowDTO
+import com.example.cloneinstagram.navigation.util.FcmPush
 import com.google.android.gms.tasks.Task
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -139,6 +141,7 @@ class UserFragment:Fragment() {
                 followDTO = FollowDTO()
                 followDTO!!.followerCount = 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
                 transaction.set(tsDocFollower, followDTO!!)
                 return@runTransaction
             }
@@ -151,11 +154,29 @@ class UserFragment:Fragment() {
                 //It add my follower when I don't follow a third person
                 followDTO!!.followerCount += 1
                 followDTO!!.followers[currentUserUid!!] = true
+                followerAlarm(uid!!)
             }
             transaction.set(tsDocFollower,followDTO!!)
             return@runTransaction
         }
     }
+
+    fun followerAlarm(destinationUid:String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinaionUid=destinationUid
+        alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.kind=2
+        alarmDTO.timestamp=System.currentTimeMillis()
+        FirebaseFirestore.getInstance().collection("alarm").document().set(alarmDTO)
+
+        var message = auth?.currentUser?.email+getString(R.string.alarm_follow)
+        FcmPush.instance.sendMessage(destinationUid,"cloneinstagram",message)
+    }
+
+
+
+
 
     fun getProfileImage(){
         firestore?.collection("profileImages")?.document(uid!!)?.addSnapshotListener { documentSnapshot, firebaseFirestoreException ->

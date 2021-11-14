@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.cloneinstagram.databinding.ActivityMainBinding
 import com.example.cloneinstagram.navigation.*
+import com.example.cloneinstagram.navigation.util.FcmPush
 import com.google.android.material.navigation.NavigationBarView
 import com.google.firebase.auth.FirebaseAuth
 
@@ -30,6 +31,7 @@ class MainActivity : AppCompatActivity(), NavigationBarView.OnItemSelectedListen
         binding.bottomNavigation.selectedItemId = R.id.action_home
         setToolbarDefault()
     }
+
 
     fun setToolbarDefault() {
         binding.toolbarUsername.visibility = View.GONE

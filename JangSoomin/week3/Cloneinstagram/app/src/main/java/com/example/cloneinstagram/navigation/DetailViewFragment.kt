@@ -15,7 +15,9 @@ import com.example.cloneinstagram.databinding.ActivityLoginBinding
 import com.example.cloneinstagram.databinding.FragmentDetailBinding
 import com.example.cloneinstagram.databinding.FragmentUserBinding
 import com.example.cloneinstagram.databinding.ItemDetailBinding
+import com.example.cloneinstagram.navigation.model.AlarmDTO
 import com.example.cloneinstagram.navigation.model.ContentDTO
+import com.example.cloneinstagram.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -104,6 +106,7 @@ class DetailViewFragment:Fragment() {
             binding2.detailviewitemCommentImageview.setOnClickListener { v ->
                 var intent = Intent(v.context, CommentActivity::class.java)
                 intent.putExtra("contentUid", contentUidList[position])
+                intent.putExtra("destinationUid",contentDTOs[position].uid)
                 startActivity(intent)
             }
         }
@@ -126,11 +129,29 @@ class DetailViewFragment:Fragment() {
                 } else {
                     contentDTO?.favoriteCount = contentDTO?.favoriteCount + 1
                     contentDTO?.favorites[uid!!] = true
+                    favoriteAlarm(contentDTOs[position].uid!!)
                 }
                 transaction.set(tsDoc, contentDTO)
             }
         }
+
+        fun favoriteAlarm(destinationUid : String){
+            var alarmDTO = AlarmDTO()
+            alarmDTO.destinaionUid=destinationUid
+            alarmDTO.userId = FirebaseAuth.getInstance().currentUser?.email
+            alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+            alarmDTO.kind=0
+            alarmDTO.timestamp=System.currentTimeMillis()
+            FirebaseFirestore.getInstance().collection("alarm").document().set(alarmDTO)
+
+            var message = FirebaseAuth.getInstance()?.currentUser?.email+ getString(R.string.alarm_favorite)
+            FcmPush.instance.sendMessage(destinationUid,"cloneinstagram",message)
+
+        }
+
+
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

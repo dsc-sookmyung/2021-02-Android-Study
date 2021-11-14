@@ -2,6 +2,7 @@ package com.example.cloneinstagram.navigation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +14,9 @@ import com.example.cloneinstagram.R
 import com.example.cloneinstagram.databinding.ActivityCommentBinding
 import com.example.cloneinstagram.databinding.ActivityMainBinding
 import com.example.cloneinstagram.databinding.ItemCommentBinding
+import com.example.cloneinstagram.navigation.model.AlarmDTO
 import com.example.cloneinstagram.navigation.model.ContentDTO
+import com.example.cloneinstagram.navigation.util.FcmPush
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 
@@ -25,7 +28,7 @@ class CommentActivity : AppCompatActivity() {
     private val binding2 get() = mBinding2!!
 
     var contentUid : String? = null
-
+    var destinationUid: String?=null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         mBinding = ActivityCommentBinding.inflate(layoutInflater)
@@ -33,7 +36,7 @@ class CommentActivity : AppCompatActivity() {
         setContentView(binding.root)
        // setContentView(R.layout.activity_comment)
         contentUid = intent.getStringExtra("contentUid")
-
+        destinationUid = intent.getStringExtra("destinationUid")
         binding.commentRecyclerview.adapter = CommentRecyclerviewAdapter()
         binding.commentRecyclerview.layoutManager = LinearLayoutManager(this)
 
@@ -45,10 +48,25 @@ class CommentActivity : AppCompatActivity() {
             comment.timestamp = System.currentTimeMillis()
 
             FirebaseFirestore.getInstance().collection("images").document(contentUid!!).collection("comments").document().set(comment)
-
+            commentAlarm(destinationUid!!,binding.commentEditMessage.text.toString())
             binding.commentEditMessage.setText("")
         }
     }
+    fun commentAlarm(destinationUid: String,message:String){
+        var alarmDTO = AlarmDTO()
+        alarmDTO.destinaionUid=destinationUid
+        alarmDTO.userId= FirebaseAuth.getInstance().currentUser?.email
+        alarmDTO.uid = FirebaseAuth.getInstance().currentUser?.uid
+        alarmDTO.kind=1
+        alarmDTO.timestamp = System.currentTimeMillis()
+        alarmDTO.message= message
+        FirebaseFirestore.getInstance().collection("alarms").document().set(alarmDTO)
+
+        var msg=FirebaseAuth.getInstance().currentUser?.email+""+getString(R.string.alarm_comment)+"of"+message
+        FcmPush.instance.sendMessage(destinationUid,"cloneinstagram",msg)
+    }
+
+
 
     inner class CommentRecyclerviewAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
