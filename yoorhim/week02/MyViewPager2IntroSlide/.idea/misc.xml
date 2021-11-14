@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/abcd2/Desktop/AndroidProject/MyViewPager2IntroSlide/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2212962962962963" />
+        <entry key="..\:/Users/abcd2/Desktop/AndroidProject/MyViewPager2IntroSlide/app/src/main/res/drawable/ic_pager_item_1.xml" value="0.2212962962962963" />
+        <entry key="..\:/Users/abcd2/Desktop/AndroidProject/MyViewPager2IntroSlide/app/src/main/res/drawable/ic_pager_item_2.xml" value="0.24074074074074073" />
+        <entry key="..\:/Users/abcd2/Desktop/AndroidProject/MyViewPager2IntroSlide/app/src/main/res/layout/activity_main.xml" value="0.16791044776119404" />
+        <entry key="..\:/Users/abcd2/Desktop/AndroidProject/MyViewPager2IntroSlide/app/src/main/res/layout/layout_intro_pager_item.xml" value="0.24864130434782608" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
