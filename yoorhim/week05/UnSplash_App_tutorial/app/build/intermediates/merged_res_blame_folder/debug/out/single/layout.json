@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "C:\\Users\\abcd2\\Desktop\\AndroidProject\\UnSplash_App_tutorial\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\activity_main.xml",
+        "source": "C:\\Users\\abcd2\\Desktop\\AndroidProject\\UnSplash_App_tutorial\\app\\src\\main\\res\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "C:\\Users\\abcd2\\Desktop\\AndroidProject\\UnSplash_App_tutorial\\app\\build\\intermediates\\incremental\\mergeDebugResources\\stripped.dir\\layout\\layout_button_search.xml",
+        "source": "C:\\Users\\abcd2\\Desktop\\AndroidProject\\UnSplash_App_tutorial\\app\\src\\main\\res\\layout\\layout_button_search.xml"
+    }
+]

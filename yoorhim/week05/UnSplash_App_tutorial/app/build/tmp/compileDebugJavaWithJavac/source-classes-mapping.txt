@@ -1,0 +1,6 @@
+com/example/unsplash_app_tutorial/databinding/ActivityMainBinding.java
+ com.example.unsplash_app_tutorial.databinding.ActivityMainBinding
+com/example/unsplash_app_tutorial/BuildConfig.java
+ com.example.unsplash_app_tutorial.BuildConfig
+com/example/unsplash_app_tutorial/databinding/LayoutButtonSearchBinding.java
+ com.example.unsplash_app_tutorial.databinding.LayoutButtonSearchBinding
