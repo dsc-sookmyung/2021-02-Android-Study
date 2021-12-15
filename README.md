@@ -20,8 +20,8 @@
 |2주차|UI & RecyclerView|<ul><li>- [x] </li></ul>|
 |3주차|Camera/Gallery|<ul><li>- [x] </li></ul>|
 |4주차|Firebase|<ul><li>- [x] </li></ul>|
-|5주차|Material Design & Retrofit2|<ul><li>- [ ] </li></ul>|
-|6주차|External Library|<ul><li>- [ ] </li></ul>|
+|5주차|Material Design & Retrofit2|<ul><li>- [x] </li></ul>|
+|6주차|External Library|<ul><li>- [x] </li></ul>|
 - [Android Study 노션](https://discreet-fold-5d5.notion.site/Android-Study-301e6529220d48eda0c8a4a7cb24ba99)
 
 
